@@ -1,6 +1,8 @@
 package com.internship.tool.service;
 
 import java.util.List;
+import java.util.Map;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ public class DfdRecordService {
         // If there's an AI call needed, we could do it here
         // e.g. String aiDesc = aiService.getAiResponse(record.getDescription());
         // if (aiDesc != null) record.setDescription(aiDesc);
-        
+
         return repository.save(record);
     }
 
@@ -31,7 +33,7 @@ public class DfdRecordService {
 
     public DfdRecord update(Long id, DfdRecord updatedRecord) {
         DfdRecord existing = repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Record not found"));
+                .orElseThrow(() -> new RuntimeException("Record not found"));
 
         existing.setTitle(updatedRecord.getTitle());
         existing.setDescription(updatedRecord.getDescription());
@@ -45,9 +47,29 @@ public class DfdRecordService {
 
     public void softDelete(Long id) {
         DfdRecord record = repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Record not found"));
+                .orElseThrow(() -> new RuntimeException("Record not found"));
 
         record.setDeleted(true);
         repository.save(record);
+    }
+
+    public Map<String, Object> getStats() {
+        long total = repository.count();
+        long active = repository.findByDeletedFalse().stream()
+                .filter(r -> "ACTIVE".equals(r.getStatus()))
+                .count();
+        long deleted = repository.findAll().stream()
+                .filter(r -> Boolean.TRUE.equals(r.getDeleted()))
+                .count();
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        long recent = repository.findAll().stream()
+                .filter(r -> r.getCreatedAt() != null && r.getCreatedAt().isAfter(oneWeekAgo))
+                .count();
+
+        return Map.of(
+                "total", total,
+                "active", active,
+                "deleted", deleted,
+                "recent", recent);
     }
 }
