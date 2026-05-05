@@ -6,9 +6,10 @@ import Dashboard from "./pages/Dashboard";
 import ListPage from "./pages/ListPage";
 import FormPage from "./pages/FormPage";
 import DetailPage from "./pages/DetailPage";
+import FileUpload from "./components/FileUpload";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// View names: 'dashboard' | 'records' | 'detail' | 'create' | 'edit'
+// View names: 'dashboard' | 'records' | 'detail' | 'create' | 'edit' | 'upload'
 function App() {
   const { token, setToken } = useContext(AuthContext);
 
@@ -50,6 +51,7 @@ function App() {
     { id: "dashboard", label: "📊 Dashboard" },
     { id: "records",   label: "📋 Records"   },
     { id: "create",    label: "➕ Create"    },
+    { id: "upload",    label: "📤 Upload"    },
   ];
 
   // ── Render Active View ───────────────────────────────────
@@ -97,6 +99,9 @@ function App() {
             onEdit={(id) => goTo("edit", id)}
           />
         );
+
+      case "upload":
+        return <FileUpload />;
 
       default:
         return <Dashboard />;
