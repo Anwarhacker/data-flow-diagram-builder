@@ -1,6 +1,8 @@
 package com.internship.tool.service;
 
 import java.util.List;
+import java.util.Map;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,5 +51,26 @@ public class DfdRecordService {
 
         record.setDeleted(true);
         repository.save(record);
+    }
+
+    public Map<String, Object> getStats() {
+        long total = repository.count();
+        long active = repository.findByDeletedFalse().stream()
+            .filter(r -> "ACTIVE".equals(r.getStatus()))
+            .count();
+        long deleted = repository.findAll().stream()
+            .filter(r -> Boolean.TRUE.equals(r.getDeleted()))
+            .count();
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        long recent = repository.findAll().stream()
+            .filter(r -> r.getCreatedAt() != null && r.getCreatedAt().isAfter(oneWeekAgo))
+            .count();
+
+        return Map.of(
+            "total", total,
+            "active", active,
+            "deleted", deleted,
+            "recent", recent
+        );
     }
 }
