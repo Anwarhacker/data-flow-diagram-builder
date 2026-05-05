@@ -1,3 +1,31 @@
+# Java / Maven
+**/target/
+**/.mvn/
+**/mvnw
+**/mvnw.cmd
+
+# Node / Frontend
+**/node_modules/
+**/dist/
+.eslintcache
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# Project specific
+ai-service/__pycache__/
+ai-service/venv/
 .env
 __pycache__/
 *.pyc
