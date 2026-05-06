@@ -7,6 +7,7 @@ import ListPage from "./pages/ListPage";
 import FormPage from "./pages/FormPage";
 import DetailPage from "./pages/DetailPage";
 import FileUpload from "./components/FileUpload";
+import Analytics from "./pages/Analytics";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // View names: 'dashboard' | 'records' | 'detail' | 'create' | 'edit' | 'upload'
@@ -50,6 +51,7 @@ function App() {
   const NAV_TABS = [
     { id: "dashboard", label: "📊 Dashboard" },
     { id: "records",   label: "📋 Records"   },
+    { id: "analytics", label: "📈 Analytics" },
     { id: "create",    label: "➕ Create"    },
     { id: "upload",    label: "📤 Upload"    },
   ];
@@ -99,6 +101,9 @@ function App() {
             onEdit={(id) => goTo("edit", id)}
           />
         );
+
+      case "analytics":
+        return <Analytics />;
 
       case "upload":
         return <FileUpload />;

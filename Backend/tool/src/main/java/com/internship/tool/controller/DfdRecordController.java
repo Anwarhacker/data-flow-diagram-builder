@@ -1,7 +1,9 @@
 package com.internship.tool.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,5 +97,27 @@ public class DfdRecordController {
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStats() {
         return ResponseEntity.ok(service.getStats());
+    }
+
+    // ─── GET /analytics → 200 OK ──────────────────────────────────────────────
+    @Operation(summary = "Get analytics data")
+    @GetMapping("/analytics")
+    public List<Map<String, Object>> getAnalytics(@RequestParam int days) {
+        List<DfdRecord> records = repository.findAll().stream()
+                .filter(r -> r.getCreatedAt() != null && r.getCreatedAt().isAfter(LocalDateTime.now().minusDays(days)))
+                .toList();
+
+        Map<String, Long> grouped = records.stream()
+                .collect(Collectors.groupingBy(
+                        r -> r.getCreatedAt().toLocalDate().toString(),
+                        Collectors.counting()
+                ));
+
+        return grouped.entrySet().stream()
+                .map(e -> Map.of(
+                        "date", e.getKey(),
+                        "count", e.getValue()
+                ))
+                .toList();
     }
 }
