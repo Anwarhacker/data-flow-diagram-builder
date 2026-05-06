@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -44,8 +47,8 @@ public class DfdRecordController {
     // ─── GET /all → 200 OK ────────────────────────────────────────────────────
     @Operation(summary = "Get all records")
     @GetMapping("/all")
-    public ResponseEntity<List<DfdRecord>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<Page<DfdRecord>> getAll(Pageable pageable) {
+        return ResponseEntity.ok(repository.findByDeletedFalse(pageable));
     }
 
     // ─── GET /{id} → 200 OK or 404 NOT FOUND ──────────────────────────────────
