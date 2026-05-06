@@ -23,7 +23,6 @@ function FileUpload() {
 
       setMessage("Upload successful");
     } catch (err) {
-      console.error(err);
       setMessage("Upload failed");
     }
   };

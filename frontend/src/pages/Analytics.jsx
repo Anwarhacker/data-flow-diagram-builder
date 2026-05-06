@@ -22,7 +22,7 @@ function Analytics() {
       const res = await API.get(`/analytics?days=${period}`);
       setData(res.data);
     } catch (err) {
-      console.error(err);
+      // Handle error silently or show user message if needed
     }
   };
 

@@ -39,8 +39,6 @@ public class DataSeeder implements CommandLineRunner {
         );
 
         repository.saveAll(records);
-
-        System.out.println("✅ Seeded 15 demo records");
     }
 
     private DfdRecord create(String title, String desc, String status) {
